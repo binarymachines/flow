@@ -1,0 +1,57 @@
+
+# from Jonathan Edwards' Subtext presentation
+
+# persistent state stored at top of tree
+
+temperature: {						# this is a top-level variable holding persistent state -- let's call it a DataObject
+
+	     celsius: 0 				# this is a variable (a kind of Field)
+	     fahrenheit = celsius * 9 / 5 + 32 		# this is a formula (also a kind of Field; it contains code, which can in turn refer to variables)
+}
+
+# I/O happens toward the bottom
+# I/O is computed from the state
+UI = temperature
+
+
+Let's call this a FormSpec
+
+A FormSpec "runs" inside a FormEngine
+
+Modifying a variable in the FormSpec produces an ObjectDelta
+
+fe = FormEngine
+fe.add(FormSpec(name='my_form', data={}))
+
+fe.modify(form=<form_name.form_field>, value=<value>)
+
+--this will produce a FormDelta object which will propagate down the tree
+--for setting values internally and generating outputs
+--the FormEngine will issue appropriate commands to the Renderer based on the modification
+
+--we can also simulate inputs (as into a live web form) by issuing in "input" command
+
+fe.input(form=<form_name.form_field>, value=<value>)
+
+-- this will  produce a FormAction which will propagate "up" from the bottom and result in updating the form's internal model
+
+
+# output flows down (one-way dataflow), input flows up (one-way action), we recommit at the top
+
+todo = {done: false, text: ""} todo    # single field (as in a form)
+domain server: {
+       todos: series{todo} # collection (as in a table)
+       assert{todos.count <=1, error: "Too many todos"}  # assertion
+}
+active = todos.filter({t: todo => t.done.false})  # deltas are processed through actions like this
+todos: server.todos
+UI : {
+   show_completed: false
+   clear_completed: {do completed.delete-all}
+   add = "" trig {do todos.put-last(todo[text: add.pend])}
+   TO_DO = if(show_completed, then: todos, else: active)
+}
+
+
+# execute assertion only after all the actions affecting it have been processed
+

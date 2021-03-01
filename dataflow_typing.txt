@@ -1,0 +1,41 @@
+
+# from Jonathan Edwards' Subtext presentation
+
+# persistent state stored at top of tree
+
+temperature: {						# this is a top-level variable holding persistent state
+
+	     celsius: 0 				# this is a variable
+	     fahrenheit = celsius * 9 / 5 + 32 		# this is a formula
+}
+
+# I/O happens toward the bottom
+# I/O is computed from the state
+UI = temperature
+
+
+# output flows down (one-way dataflow), input flows up (one-way action), we recommit at the top
+
+
+
+
+record todo = {done!bool: false, text!str: ""}
+
+domain server = {
+       recordset todos = series(todo)
+       assert{todos.count <=1, error: "Too many todos"}
+}
+
+recordset active = todos.filter({t: todo => t.done.false})
+recordset todos: server.todos
+
+UI : {
+   show_completed: false
+   clear_completed: {do completed.delete-all}
+   add = "" trig {do todos.put-last(todo[text: add.pend])}
+   TO_DO = if(show_completed, then: todos, else: active)
+}
+
+
+# execute assertion only after all the actions affecting it have been processed
+
