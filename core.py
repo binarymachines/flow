@@ -29,7 +29,8 @@ class DataForm(object):
     '''a top-level variable holding persistent state
     '''
 
-    def __init__(self):
+    def __init__(self, name: str):
+        self.name = name
         self.fields = {}
 
 
@@ -39,13 +40,13 @@ class DataFormBuilder(object):
 
 
 class FormDelta(object):
-    def __init__(self):
+    def __init__(self, form_name: str, field_name: str, value: object):
         pass
 
 
 
 class FormAction(object):
-    def __init__(self):
+    def __init__(self, form_name: str, field_Name: str, value: object):
         pass
 
 
