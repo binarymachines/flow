@@ -2,6 +2,12 @@
 
 start: ( form )+
 
+PLUS: "+"
+MINUS: "-"
+MULT: "*"
+DIV: "/"
+MOD: "%"
+
 boolean: "true" | "false"
 
 value: string   
@@ -10,7 +16,7 @@ value: string
 
 variable: name ":" value
 
-operator: ( "+" | "-" | "/" | "*" | "%" )
+operator: (PLUS | MINUS | MULT | DIV | MOD)
 
 expression: name
           | number              
@@ -20,13 +26,14 @@ expression: name
 
 formula: name "=" expression
 
-field: ( variable | formula )+
+field: (variable | formula)+
 
-form: name ":" "{" ( field )+ "}"
+form: name ":" "{" (field)+ "}"
 
-name   : CNAME
-string : ESCAPED_STRING
-number : SIGNED_NUMBER
+name    : CNAME
+string  : ESCAPED_STRING
+number  : SIGNED_NUMBER
+
 
 %import common.ESCAPED_STRING   
 %import common.SIGNED_NUMBER
