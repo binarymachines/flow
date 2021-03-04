@@ -1,6 +1,6 @@
 
 
-start: ( form )
+start: ( form )+
 
 boolean: "true" | "false"
 
@@ -8,7 +8,7 @@ value: string
      | number 
      | boolean 
 
-variable: string ":" value
+variable: name ":" value
 
 operator: "+" | "-" | "/" | "*" | "%"
 
@@ -18,12 +18,14 @@ formula: string "=" expression
 
 field: ( variable | formula )+
 
-form: string ":" "{" ( field )+ "}"
+form: name ":" "{" ( field )+ "}"
 
+name   : CNAME
 string : ESCAPED_STRING
 number : SIGNED_NUMBER
 
 %import common.ESCAPED_STRING   
-%import common.SIGNED_NUMBER    
+%import common.SIGNED_NUMBER
+%import common.CNAME 
 %import common.WS
 %ignore WS 
