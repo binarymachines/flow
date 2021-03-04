@@ -1,0 +1,29 @@
+
+
+start: ( form )
+
+boolean: "true" | "false"
+
+value: string   
+     | number 
+     | boolean 
+
+variable: string ":" value
+
+operator: "+" | "-" | "/" | "*" | "%"
+
+expression: string operator (variable | expression)
+
+formula: string "=" expression
+
+field: ( variable | formula )+
+
+form: string ":" "{" ( field )+ "}"
+
+string : ESCAPED_STRING
+number : SIGNED_NUMBER
+
+%import common.ESCAPED_STRING   
+%import common.SIGNED_NUMBER    
+%import common.WS
+%ignore WS 
