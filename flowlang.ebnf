@@ -10,11 +10,15 @@ value: string
 
 variable: name ":" value
 
-operator: "+" | "-" | "/" | "*" | "%"
+operator: ( "+" | "-" | "/" | "*" | "%" )
 
-expression: string operator (variable | expression)
+expression: name
+          | number              
+          | name operator expression
+          | number operator expression
+          | expression operator expression
 
-formula: string "=" expression
+formula: name "=" expression
 
 field: ( variable | formula )+
 
